@@ -1,0 +1,25 @@
+# Sensitive files
+config.php
+
+# Server and environment files
+.env
+*.log
+/html/.htaccess  # If you have sensitive rules; adjust as needed
+
+# Cache and temporary files
+/html/cache/
+/html/tmp/
+/html/uploads/  # If you have user-uploaded files
+
+# Development and system files
+.DS_Store       # macOS system files
+Thumbs.db       # Windows system files
+*.bak
+*.swp
+*.swo
+
+# IDE and editor files
+.idea/          # PhpStorm/WebStorm
+.vscode/        # Visual Studio Code
+*.sublime-project
+*.sublime-workspace

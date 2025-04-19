@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Mockup - Icon-Only Tooltip Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Summary card (unchanged) */
+        .summary-card {
+            background-color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .summary-card h5 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        .summary-card .summary-box {
+            background-color: #f9fafb;
+            border-radius: 6px;
+            padding: 14px;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .summary-card .summary-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .summary-card .summary-box strong {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #555;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .summary-card .summary-box span {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #222;
+        }
+        .summary-card .row {
+            margin: -8px;
+        }
+        .summary-card .col {
+            padding: 8px;
+        }
+        .summary-card .token-section {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f1f3f5;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+        }
+        .summary-card .token-section .token-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .summary-card .token-section .token-right {
+            display: flex;
+            gap: 8px;
+        }
+        .summary-card .token-section strong {
+            color: #444;
+            font-weight: 500;
+        }
+        .summary-card .token-section a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .summary-card .token-section a:hover {
+            text-decoration: underline;
+        }
+        .summary-card .token-section .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.85rem;
+        }
+        /* Table styling */
+        .appointment-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .appointment-table th, .appointment-table td {
+            padding: 12px;
+            border: none;
+            vertical-align: middle;
+        }
+        .appointment-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .appointment-table tbody tr {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .appointment-table tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .appointment-table tbody tr.status-scheduled {
+            background: linear-gradient(135deg, #e7f3ff 0%, #d4e9ff 100%);
+        }
+        .appointment-table tbody tr.status-attended {
+            background: linear-gradient(135deg, #e6ffed 0%, #d4f7e0 100%);
+        }
+        .appointment-table tbody tr.status-missed {
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffd4d4 100%);
+        }
+        .appointment-table tbody tr.status-rescheduled {
+            background: linear-gradient(135deg, #fffde7 0%, #fff8cc 100%);
+        }
+        .appointment-table tbody tr td {
+            border-bottom: 1px solid rgba(222, 226, 230, 0.3);
+        }
+        .appointment-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        /* Icon-only tooltip menu */
+        .action-tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .action-tooltip .trigger-btn {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            color: #6c757d;
+            padding: 4px;
+        }
+        .action-tooltip .trigger-btn:hover {
+            color: #5c636a;
+        }
+        .action-tooltip .tooltip-menu {
+            display: none;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 8px;
+            flex-direction: column;
+            gap: 6px;
+            width: 40px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .action-tooltip:hover .tooltip-menu {
+            display: flex;
+            opacity: 1;
+        }
+        .action-tooltip .tooltip-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #fff;
+            transition: transform 0.2s ease;
+        }
+        .action-tooltip .tooltip-btn:hover {
+            transform: rotate(10deg);
+        }
+        .action-tooltip .tooltip-btn.active {
+            transform: scale(1.1);
+        }
+        .action-tooltip .btn-reschedule { background-color: #007bff; }
+        .action-tooltip .btn-attended { background-color: #28a745; }
+        .action-tooltip .btn-missed { background-color: #dc3545; }
+        .action-tooltip .btn-reset { background-color: #6c757d; }
+        .action-tooltip .btn-delete { background-color: #ffc107; }
+        /* Responsive */
+        @media (min-width: 1200px) {
+            .summary-card .row {
+                display: flex;
+                flex-wrap: nowrap;
+            }
+            .summary-card .col {
+                flex: 1;
+                min-width: 0;
+            }
+        }
+        @media (max-width: 991.98px) {
+            .summary-card .row {
+                margin: -6px;
+            }
+            .summary-card .col {
+                padding: 6px;
+            }
+            .summary-card .summary-box {
+                padding: 12px;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .summary-card .token-section {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 8px;
+            }
+            .summary-card .token-section .token-left {
+                flex-wrap: wrap;
+            }
+            .summary-card .token-section a {
+                word-break: break-all;
+            }
+            .action-tooltip .tooltip-menu {
+                width: 48px;
+            }
+            .action-tooltip .tooltip-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .summary-card h5 {
+                font-size: 1.1rem;
+            }
+            .summary-card .summary-box strong {
+                font-size: 0.9rem;
+            }
+            .summary-card .summary-box span {
+                font-size: 1rem;
+            }
+            .action-tooltip .trigger-btn {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Your Schedule</h1>
+
+        <!-- Summary Card -->
+        <div class="card shadow-sm summary-card">
+            <h5>Appointment Summary for ExampleUser</h5>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-7">
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Start Date</strong>
+                        <span>01/01/2025</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>End Date</strong>
+                        <span>12/31/2025</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Total</strong>
+                        <span>12</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Remaining</strong>
+                        <span>8</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Attended</strong>
+                        <span>3</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Missed</strong>
+                        <span>1</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Rescheduled</strong>
+                        <span>0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="token-section">
+                <div class="token-left">
+                    <strong>Read-Only Token:</strong>
+                    <a href="#" id="publicUrl">abc123xyz789</a>
+                </div>
+                <div class="token-right">
+                    <button class="btn btn-primary btn-sm">Regenerate</button>
+                    <button class="btn btn-warning btn-sm" id="copyUrlBtn">Copy URL</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="appointment-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="status-scheduled">
+                            <td>01/07/2025</td>
+                            <td>Scheduled</td>
+                            <td>
+                                <div class="action-tooltip">
+                                    <button class="trigger-btn">…</button>
+                                    <div class="tooltip-menu">
+                                        <button class="tooltip-btn btn-reschedule" title="Reschedule">↻</button>
+                                        <button class="tooltip-btn btn-attended" title="Attended">✓</button>
+                                        <button class="tooltip-btn btn-missed" title="Missed">✗</button>
+                                        <button class="tooltip-btn btn-reset" title="Reset">⟲</button>
+                                        <button class="tooltip-btn btn-delete" title="Delete">🗑</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="status-attended">
+                            <td>01/14/2025</td>
+                            <td>Attended</td>
+                            <td>
+                                <div class="action-tooltip">
+                                    <button class="trigger-btn">…</button>
+                                    <div class="tooltip-menu">
+                                        <button class="tooltip-btn btn-reschedule" title="Reschedule">↻</button>
+                                        <button class="tooltip-btn btn-attended" title="Attended">✓</button>
+                                        <button class="tooltip-btn btn-missed" title="Missed">✗</button>
+                                        <button class="tooltip-btn btn-reset" title="Reset">⟲</button>
+                                        <button class="tooltip-btn btn-delete" title="Delete">🗑</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="status-missed">
+                            <td>01/21/2025</td>
+                            <td>Missed<br>01/21/2025 -> 01/28/2025</td>
+                            <td>
+                                <div class="action-tooltip">
+                                    <button class="trigger-btn">…</button>
+                                    <div class="tooltip-menu">
+                                        <button class="tooltip-btn btn-reschedule" title="Reschedule">↻</button>
+                                        <button class="tooltip-btn btn-attended" title="Attended">✓</button>
+                                        <button class="tooltip-btn btn-missed" title="Missed">✗</button>
+                                        <button class="tooltip-btn btn-reset" title="Reset">⟲</button>
+                                        <button class="tooltip-btn btn-delete" title="Delete">🗑</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tooltips = document.querySelectorAll('.action-tooltip');
+            tooltips.forEach(tooltip => {
+                const buttons = tooltip.querySelectorAll('.tooltip-btn');
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        buttons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

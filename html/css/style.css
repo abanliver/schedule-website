@@ -1,0 +1,31 @@
+/* Custom styles for Appointment Tracker */
+
+/* Status background colors for appointment table rows */
+.table tbody tr.status-scheduled {
+    background-color: #e7f3ff !important; /* Light blue */
+}
+.table tbody tr.status-attended {
+    background-color: #e6ffed !important; /* Light green */
+}
+.table tbody tr.status-missed {
+    background-color: #ffe6e6 !important; /* Light red */
+}
+.table tbody tr.status-rescheduled {
+    background-color: #fffde7 !important; /* Light yellow */
+}
+
+/* Hover effect for interactivity */
+.table tbody tr:hover {
+    filter: brightness(95%);
+}
+
+/* Card and button styling */
+.card {
+    border-radius: 10px;
+}
+.btn {
+    border-radius: 5px;
+}
+.summary-card .bg-light {
+    border: 1px solid #dee2e6;
+}

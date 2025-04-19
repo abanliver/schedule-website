@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Schedule Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --success: #16a34a;
+            --warning: #eab308;
+            --danger: #dc2626;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 20px;
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .summary-card h5 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            padding: 1.5rem 1.5rem 0;
+        }
+
+        .summary-box {
+            background: rgba(241, 245, 249, 0.6);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .summary-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Appointment Table */
+        .appointment-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .appointment-table th {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .appointment-table td {
+            background: white;
+            padding: 1rem;
+            border: none;
+            position: relative;
+        }
+
+        .status-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 2px 0 0 2px;
+        }
+
+        .status-scheduled .status-indicator { background: var(--primary); }
+        .status-attended .status-indicator { background: var(--success); }
+        .status-missed .status-indicator { background: var(--danger); }
+        .status-rescheduled .status-indicator { background: var(--warning); }
+
+        /* Responsive Fixes */
+        @media (max-width: 768px) {
+            .summary-card .col {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+
+            .appointment-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .appointment-table td::before {
+                content: attr(data-label);
+                display: block;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: #64748b;
+            }
+
+            .appointment-table thead {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Medical Appointment Schedule</h1>
+
+        <!-- Summary Card -->
+        <div class="card summary-card">
+            <h5>Q1 2024 Appointments Overview</h5>
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-7 g-2 p-3">
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Start Date</strong>
+                        <span>Jan 8, 2024</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>End Date</strong>
+                        <span>Mar 28, 2024</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Total</strong>
+                        <span>86</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Remaining</strong>
+                        <span>32</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Attended</strong>
+                        <span>48</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Missed</strong>
+                        <span>4</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="summary-box">
+                        <strong>Rescheduled</strong>
+                        <span>12</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointment Table -->
+        <div class="card summary-card">
+            <div class="card-body p-0">
+                <table class="appointment-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Date/Time</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="status-scheduled">
+                            <td data-label="Patient">
+                                <div class="status-indicator"></div>
+                                Emily Rodriguez
+                            </td>
+                            <td data-label="Date/Time">Feb 15 · 9:00 AM</td>
+                            <td data-label="Type">Follow-up</td>
+                            <td data-label="Status">Scheduled</td>
+                            <td data-label="Actions">
+                                <button class="btn btn-sm btn-primary">Edit</button>
+                                <button class="btn btn-sm btn-success">Confirm</button>
+                            </td>
+                        </tr>
+                        <tr class="status-attended">
+                            <td data-label="Patient">
+                                <div class="status-indicator"></div>
+                                Michael Chen
+                            </td>
+                            <td data-label="Date/Time">Feb 14 · 2:30 PM</td>
+                            <td data-label="Type">Physical</td>
+                            <td data-label="Status">Attended</td>
+                            <td data-label="Actions">
+                                <button class="btn btn-sm btn-secondary">Records</button>
+                            </td>
+                        </tr>
+                        <tr class="status-missed">
+                            <td data-label="Patient">
+                                <div class="status-indicator"></div>
+                                David Miller
+                            </td>
+                            <td data-label="Date/Time">Feb 12 · 10:15 AM</td>
+                            <td data-label="Type">Consultation</td>
+                            <td data-label="Status">Missed</td>
+                            <td data-label="Actions">
+                                <button class="btn btn-sm btn-danger">Notify</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
